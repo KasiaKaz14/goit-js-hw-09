@@ -1,58 +1,51 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-flatpickr('input[type=text]', {
+flatpickr('input[type="text"]', {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    if (selectedDates[0] < new Date()) {
+      return window.alert('Please choose a date in the future');
+    } else {
+      startBtn.disabled = false;
+      updateCounter();
+    }
   },
 });
 
-const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose(selectedDates) {
-    console.log(selectedDates[0]);
-  },
-};
-
-const dateTime = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('[data-start]');
-const counter = document.querySelectorAll('.value');
+const daysEl = document.querySelector('[data-days]');
+const hoursEl = document.querySelector('[data-hours]');
+const minutesEl = document.querySelector('[data-minutes]');
+const secondsEl = document.querySelector('[data-seconds]');
+const dateTime = document.querySelector('input[type="text"]');
 
-startBtn.addEventListener('click', calendar);
+startBtn.addEventListener('click', updateCounter);
 
-let intervalId;
-let now = newDate().getTime();
+let intervalidId = null;
+startBtn.disabled = true;
 
 function updateCounter() {
   intervalId = setInterval(() => {
-    let selectedDate = new Date(dateTime.value);
-    let difference = selectedDate - now;
-    counter.textContent = `${(days, hours, minutes, seconds)}`;
+    const selectedDate = dateTime.value;
+    const selectedDateMs = new Date(selectedDate).getTime();
+    const currentDateMs = new Date().getTime();
+    const timeLeft = selectedDateMs - currentDateMs;
+    const timeLeftConvertMs = convertMs(timeLeft);
+    daysEl.textContent = addLeadingZero(timeLeftConvertMs.days);
+    hoursEl.textContent = addLeadingZero(timeLeftConvertMs.hours);
+    minutesEl.textContent = addLeadingZero(timeLeftConvertMs.minutes);
+    secondsEl.textContent = addLeadingZero(timeLeftConvertMs.seconds);
   }, 1000);
 }
 
-function onClose() {
-  dateTime.remove();
-  updateCounter();
-}
-
-function calendar() {
-  if (options.defaultDate === new Date(dateTime.value)) {
-    return window.alert('Please choose a date in the future');
-  }
-
-  updateCounter();
-  startBtn.disabled = true;
-}
-
 function addLeadingZero() {
-  padStart();
+  if (value.toString().length === 1) {
+    return value.toString().padStart(2, '0');
+  }
+  return value;
 }
 
 function convertMs(ms) {

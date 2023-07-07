@@ -27,13 +27,13 @@ const counter = document.querySelectorAll('.value');
 startBtn.addEventListener('click', calendar);
 
 let intervalId;
-let selectedDate;
+let now = newDate().getTime();
 
 function updateCounter() {
-  selectedDate = new Date(dateTime.value);
   intervalId = setInterval(() => {
-    const difference = selectedDate.getTime() - Date.now();
-    counter.textContent = difference;
+    let selectedDate = new Date(dateTime.value);
+    let difference = selectedDate - now;
+    counter.textContent = `${(days, hours, minutes, seconds)}`;
   }, 1000);
 }
 
@@ -43,11 +43,11 @@ function onClose() {
 }
 
 function calendar() {
-  if (options.enableTime === new Date().getTime) {
-    updateCounter();
+  if (options.defaultDate === new Date(dateTime.value)) {
+    return window.alert('Please choose a date in the future');
   }
 
-  return window.alert('Please choose a date in the future');
+  updateCounter();
   startBtn.disabled = true;
 }
 

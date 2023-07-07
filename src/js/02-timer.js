@@ -10,10 +10,6 @@ flatpickr('input[type=text]', {
   },
 });
 
-const dateTime = document.querySelector('#datetime-picker');
-const startBtn = document.querySelector('[data-start]');
-const counter = document.querySelectorAll('.value');
-
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -24,12 +20,17 @@ const options = {
   },
 };
 
+const dateTime = document.querySelector('#datetime-picker');
+const startBtn = document.querySelector('[data-start]');
+const counter = document.querySelectorAll('.value');
+
 startBtn.addEventListener('click', calendar);
 
 let intervalId;
+let selectedDate;
 
 function updateCounter() {
-  const selectedDate = new Date(dateTime.value);
+  selectedDate = new Date(dateTime.value);
   intervalId = setInterval(() => {
     const difference = selectedDate.getTime() - Date.now();
     counter.textContent = difference;
@@ -42,12 +43,12 @@ function onClose() {
 }
 
 function calendar() {
-  if (options.defaultDate === new Date()) {
-    startBtn.disabled = true;
+  if (options.enableTime === new Date().getTime) {
     updateCounter();
   }
 
   return window.alert('Please choose a date in the future');
+  startBtn.disabled = true;
 }
 
 function addLeadingZero() {

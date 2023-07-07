@@ -25,12 +25,16 @@ const options = {
 };
 
 startBtn.addEventListener('click', updateCounter);
-counterslack.addEventListener('click, calendar');
+counter.addEventListener('click, calendar');
+
+let intervalId;
 
 function updateCounter() {
-  const selectedDate = new Date(dateTime.value);
-  const difference = selectedDate.getTime() - Date.now();
-  days.textContent = `${days} days, ${hours}, ${minutes}, ${seconds}`;
+  intervalId = setInterval(() => {
+    const selectedDate = new Date(dateTime.value);
+    const difference = selectedDate.getTime() - Date.now();
+    counter.textContent = `${days}, ${hours}, ${minutes}, ${seconds}`;
+  }, 1000);
 }
 
 function onClose() {
@@ -39,9 +43,9 @@ function onClose() {
 }
 
 function calendar() {
-  if (options.defaultDate === new Date()) {
-    updateCounter;
+  if (options.defaultDate !== new Date(dateTime.value)) {
     startBtn.disabled = true;
+    updateCounter();
   }
 
   return window.alert('Please choose a date in the future');

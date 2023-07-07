@@ -10,42 +10,40 @@ flatpickr('input[type="text"]', {
       return window.alert('Please choose a date in the future');
     } else {
       startBtn.disabled = false;
-      updateCounter();
     }
   },
 });
 
-const startBtn = document.querySelector('[data-start]');
+const startBtn = document.querySelector('button[data-start]');
 const daysEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
 const minutesEl = document.querySelector('[data-minutes]');
 const secondsEl = document.querySelector('[data-seconds]');
 const dateTime = document.querySelector('input[type="text"]');
 
-startBtn.addEventListener('click', updateCounter);
-
 let intervalidId = null;
 startBtn.disabled = true;
+
+function addLeadingZero() {
+  if (value.toString().length === 1) {
+    return value.toString().padStart(2, '0');
+  } else {
+    return value;
+  }
+}
 
 function updateCounter() {
   intervalId = setInterval(() => {
     const selectedDate = dateTime.value;
     const selectedDateMs = new Date(selectedDate).getTime();
-    const currentDateMs = new Date().getTime();
-    const timeLeft = selectedDateMs - currentDateMs;
-    const timeLeftConvertMs = convertMs(timeLeft);
+    const currentDate = new Date().getTime();
+    const difference = selectedDateMs - currentDate;
+    const timeLeftConvertMs = convertMs(difference);
     daysEl.textContent = addLeadingZero(timeLeftConvertMs.days);
     hoursEl.textContent = addLeadingZero(timeLeftConvertMs.hours);
     minutesEl.textContent = addLeadingZero(timeLeftConvertMs.minutes);
     secondsEl.textContent = addLeadingZero(timeLeftConvertMs.seconds);
   }, 1000);
-}
-
-function addLeadingZero() {
-  if (value.toString().length === 1) {
-    return value.toString().padStart(2, '0');
-  }
-  return value;
 }
 
 function convertMs(ms) {
@@ -70,3 +68,5 @@ function convertMs(ms) {
 console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+
+startBtn.addEventListener('click', updateCounter);

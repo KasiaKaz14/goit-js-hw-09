@@ -24,16 +24,15 @@ const options = {
   },
 };
 
-startBtn.addEventListener('click', updateCounter);
-counter.addEventListener('click, calendar');
+startBtn.addEventListener('click', calendar);
 
 let intervalId;
 
 function updateCounter() {
+  const selectedDate = new Date(dateTime.value);
   intervalId = setInterval(() => {
-    const selectedDate = new Date(dateTime.value);
     const difference = selectedDate.getTime() - Date.now();
-    counter.textContent = `${days}, ${hours}, ${minutes}, ${seconds}`;
+    counter.textContent = difference;
   }, 1000);
 }
 
@@ -43,7 +42,7 @@ function onClose() {
 }
 
 function calendar() {
-  if (options.defaultDate !== new Date(dateTime.value)) {
+  if (options.defaultDate === new Date()) {
     startBtn.disabled = true;
     updateCounter();
   }

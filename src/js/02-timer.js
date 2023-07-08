@@ -1,6 +1,17 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-flatpickr('input[type="text"]', {
+
+const dateTime = document.querySelector('#datetime-picker');
+const startBtn = document.querySelector('button[data-start]');
+const daysEl = document.querySelector('[data-days]');
+const hoursEl = document.querySelector('[data-hours]');
+const minutesEl = document.querySelector('[data-minutes]');
+const secondsEl = document.querySelector('[data-seconds]');
+
+let intervalidId;
+startBtn.disabled = true;
+
+flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
@@ -14,36 +25,33 @@ flatpickr('input[type="text"]', {
   },
 });
 
-const startBtn = document.querySelector('button[data-start]');
-const daysEl = document.querySelector('[data-days]');
-const hoursEl = document.querySelector('[data-hours]');
-const minutesEl = document.querySelector('[data-minutes]');
-const secondsEl = document.querySelector('[data-seconds]');
-const dateTime = document.querySelector('input[type="text"]');
+startBtn.addEventListener('click', updateCounter);
 
-let intervalidId = null;
-startBtn.disabled = true;
-
-function addLeadingZero() {
+function addLeadingZero(value) {
   if (value.toString().length === 1) {
-    return value.toString().padStart(2, '0');
+    return value.toString().padStart();
   } else {
     return value;
   }
 }
 
 function updateCounter() {
+  const selectedDate = dateTime.value;
+  const selectedDateMs = new Date(selectedDate).getTime();
   intervalId = setInterval(() => {
-    const selectedDate = dateTime.value;
-    const selectedDateMs = new Date(selectedDate).getTime();
-    const currentDate = new Date().getTime();
+    let currentDate = new Date().getTime();
     const difference = selectedDateMs - currentDate;
     const timeLeftConvertMs = convertMs(difference);
-    daysEl.textContent = addLeadingZero(timeLeftConvertMs.days);
-    hoursEl.textContent = addLeadingZero(timeLeftConvertMs.hours);
-    minutesEl.textContent = addLeadingZero(timeLeftConvertMs.minutes);
-    secondsEl.textContent = addLeadingZero(timeLeftConvertMs.seconds);
-  }, 1000);
+    if (timeLeftConvertMs.seconds >= 0) {
+      daysEl.textContent = addLeadingZero(timeLeftConvertMs.days);
+      hoursEl.textContent = addLeadingZero(timeLeftConvertMs.hours);
+      minutesEl.textContent = addLeadingZero(timeLeftConvertMs.minutes);
+      secondsEl.textContent = addLeadingZero(timeLeftConvertMs.seconds);
+    } else {
+      return window.alert('Countdown finished');
+      clearInterval(intervalId);
+    }
+  });
 }
 
 function convertMs(ms) {
@@ -68,5 +76,3 @@ function convertMs(ms) {
 console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
-startBtn.addEventListener('click', updateCounter);

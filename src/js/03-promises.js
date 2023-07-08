@@ -26,7 +26,7 @@ form.addEventListener('submit', function (event) {
         );
       });
 
-    delay += amount;
+    delay += step;
   }
 });
 

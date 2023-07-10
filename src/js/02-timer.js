@@ -48,7 +48,6 @@ function updateCounter() {
       minutesEl.textContent = addLeadingZero(timeLeftConvertMs.minutes);
       secondsEl.textContent = addLeadingZero(timeLeftConvertMs.seconds);
     } else {
-      return window.alert('Countdown finished');
       clearInterval(intervalId);
     }
   });
